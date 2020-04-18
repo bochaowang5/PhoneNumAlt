@@ -1,0 +1,101 @@
+<style>
+  /* Responsive Styles */
+  @media screen and (max-width: 767px) {
+
+    .card-container > *:not(.circle-link) ,
+    .terminal {
+      width: 100%;
+    }
+
+    
+
+    .card:not(.highlight-card) {
+      height: 16px;
+      margin: 8px 0;
+    }
+
+    .card.highlight-card span {
+      margin-left: 72px;
+    }
+
+    svg#rocket-smoke {
+      right: 120px;
+      transform: rotate(-5deg);
+    }
+  }
+
+  @media screen and (max-width: 575px) {
+    svg#rocket-smoke {
+      display: none;
+      visibility: hidden;
+    }
+  }
+  .table{
+    border-spacing: 20px;
+  }
+
+  .center{
+      display: flex; 
+      justify-content: center;
+      align-items: center;
+    }
+
+  .input{
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+  }
+  .alert{
+    color: red;
+    display: block;
+  }
+  .btn{
+    margin-top: 1%;
+    margin-left: 50%;
+  }
+</style>
+
+
+<div class="center">
+  <h2>Please enter a 7 or 10 digits phone number</h2>
+</div>
+
+<form>
+  <div class="center form-group">
+    <label for="phone">Phone Number: </label>
+    <input required pattern="^\d{7}(\d{3})?$" placeholder="2403866106" ngModel name="phone" #phone="ngModel" id="phone" type="text" class="form-control">
+    <div class="alert" *ngIf="phone.touched && !phone.valid">
+      <div *ngIf="phone.errors.required">Phone number is required</div>
+      <div *ngIf="phone.errors.pattern">Invalid phone number</div>
+    </div>
+  </div>
+  <button class="btn" [disabled]="!phone.valid" (click)="fetchData(phone.value)">Submit</button>
+</form>
+
+  <hr />
+
+  <br>
+  <br>
+  <div class="result" class="center">
+    Total number of combinations: {{(nums | async)?.length}}
+  </div>
+  <br>
+  
+  <table class="table" align="center">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Phone Number Alternatives</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <tr *ngFor="let num of nums | async | paginate: {itemsPerPage: 50, currentPage: p}; index as i">  
+        <td>{{50 * (p - 1) + i + 1}}</td>
+        <td align="center">{{num.value}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
+  <pagination-controls class="center" (pageChange)="p = $event"></pagination-controls>
+
